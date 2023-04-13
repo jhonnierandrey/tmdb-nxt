@@ -1,27 +1,24 @@
-export async function generateStaticParams(){
+type MovieDetailProps = {
+    params: {
+        movie: number
+    }
+}
+
+export async function generateStaticParams() {
     const data = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${process.env.API_KEY}`)
     const res = await data.json()
-    
-    return res.results.map((movie) => ({
-        movie: toString(movie.id),
+    return res.results.map((movie: any) => ({
+        movie: movie.id.toString(),
     }))
 }
 
-const MovieDetail = async ({params}) => {
+const MovieDetail = async ({ params }: MovieDetailProps) => {
     const { movie } = params
-    const data = await fetch(`https://api.themoviedb.org/3/movie/${movie}?api_key=${process.env.API_KEY}`, {next : {revalidate : 0}})
+    const data = await fetch(`https://api.themoviedb.org/3/movie/${movie}?api_key=${process.env.API_KEY}`, { next: { revalidate: 0 } })
     const res = await data.json()
     const imagePath = `https://image.tmdb.org/t/p/original${res.backdrop_path}`;
 
     return (
-        // <div>
-        //     <h2 className="text-2x1">{res.title}</h2>
-        //     <h2 className="text-lg">{res.release_date}</h2>
-        //     <h2>Runtime: {res.runtime} minutes</h2>
-        //     <h2 className="text-small bg-green-600 inline-block my-2 py-2 px-4 rounded-md">{res.status}</h2>
-        //     <Image className="my-12" src={imagePath} width={1000} height={1000} alt={res.title} priority/>
-        //     <p>{res.overview}</p>
-        // </div>
         <div className="container p-4">
             <div className="card text-bg-dark">
                 <img src={imagePath} className="card-img" alt={res.title} />
