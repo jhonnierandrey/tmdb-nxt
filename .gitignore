@@ -106,3 +106,4 @@ dist
 # Mix
 .vscode
 .env.local
+.DS_Store
